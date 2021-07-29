@@ -1,11 +1,27 @@
 from Deck import DoubleDeck
 from tabulate import tabulate
 from Deck import CardStack
+import json
 
 class Game:
     def __init__(self):
         self._deck = DoubleDeck()
         self._stackList = []
+    
+    def get_cards(self):
+        cards = []
+        for i in range(len(self._stackList)):
+            stack_cards = self._stackList[i].get_cards()
+            cleaned_stack_cards = []
+            for i in range(len(stack_cards)):
+                if(stack_cards[i].is_face_up() == False):
+                    cleaned_stack_cards.append('flipped')
+                else:
+                    cleaned_stack_cards.append([stack_cards[i].get_true_num(),
+                                            stack_cards[i].get_suit()
+                                            ])
+            cards.append(cleaned_stack_cards)
+        return json.dumps(cards)
     
     def setup(self):
         #shuffle n number of times
@@ -44,12 +60,17 @@ class Game:
                                         "Stack# 9"]))
 
     def deal(self):
+        status = ''
         if (len(self._deck.getCards()) >= 10):
             for i in range(10):
                 #these are dealt face up
                 self._stackList[i % 10].add(self._deck.dealOne(True))
+            status = 'hand delt!'
         else:
+            status = "all cards already delt!"
             print("all cards already delt!")
+        
+        return status
         
     def pickup_card(self, stacknum, rownum):
         if(stacknum > len(self._stackList)-1):

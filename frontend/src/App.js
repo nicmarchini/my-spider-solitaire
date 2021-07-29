@@ -1,8 +1,9 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './css/normalize.css';
 import './css/skeleton.css';
 import './css/style.css';
 import React from 'react';
+import axios from 'axios';
 
 class App extends React.Component{
   constructor() {
@@ -41,6 +42,29 @@ class App extends React.Component{
       }
     }
 
+    newGame(){
+      const options = {
+        url: 'http://localhost:5000/newgame',
+        method: 'POST',
+        withCredentials: true
+        // ,
+        // headers: {
+        //   'Accept': 'application/json',
+        //   'Content-Type': 'application/json;charset=UTF-8'
+        // },
+        // data: {
+        //   a: 10,
+        //   b: 20
+        // }
+      };
+    
+    axios(options)
+      .then(response => {
+        console.log(response);
+      });
+      this.getAllCards()
+    }
+
     setCards(stack, cardlist){
       let results = JSON.parse(localStorage.getItem('s'+stack));
       if (results==null){
@@ -66,6 +90,52 @@ class App extends React.Component{
       let stack_num = 's'+stack;
       this.setState({ [stack_num] : results})
     }
+
+    getAllCards(){
+        // let data = []
+
+        const options = {
+          url: 'http://localhost:5000/getcards',
+          method: 'GET',
+          withCredentials: true
+          // ,
+          // headers: {
+          //   'Accept': 'application/json',
+          //   'Content-Type': 'application/json;charset=UTF-8'
+          // },
+          // data: {
+          //   a: 10,
+          //   b: 20
+          // }
+        };
+      
+      axios(options)
+        .then(response => {
+          // console.log(JSON.parse(response.data));
+          let data = JSON.parse(response.data)
+          for (var i = 0; i < 10; i++) {
+            this.setCards(i, data[i])
+            this.getCards(i)
+            //console.log(this.state)
+          }
+        });
+    }
+
+    deal(){
+
+      const options = {
+        url: 'http://localhost:5000/deal',
+        method: 'POST',
+        withCredentials: true
+      };
+    
+    axios(options)
+      .then(response => {
+        console.log(response)
+      });
+      this.getAllCards()
+  }
+
   
     render() {
 
@@ -73,14 +143,17 @@ class App extends React.Component{
       for (var i = 0; i < 10; i++) {
           let num = i
           rows.push(
-            <div class="one column">stack {i}
+            //math.random not ideal solution here migth cause extra re-rendering due to key not being stable can fix later
+            <div key={Math.random()} className="one column">
+              {/* stack {i} */}
                     
                     {/* <button onClick={() => this.setCards(num, [1,2,3,4,5]) }>Add</button> */}
                     {/* <button onClick={() => this.clearCards(num) }>Clear</button> */}
                   
                     {this.state['s'+num].map(function(card,index){
                         return(
-                          <p>{card}</p>
+                          //see above about key
+                          <p key={Math.random()}>{card[0] + " of " + card[1]}</p>
                         )
                     })}
 
@@ -88,16 +161,18 @@ class App extends React.Component{
       } 
 
     return (
-            <div class="container">
+            <div className="container">
               <h1>My Spidey SOlly</h1>
-              <button onClick={() => this.setCards(0, [1,2,3,4,5])}>Deal</button>
-              <div class="example-grid docs-example">
-              <div class="row">
-                  <div class="one column"></div>
+              <button onClick={() => this.newGame()}>New Game</button>
+              {/* <button onClick={() => this.getAllCards()}>Get Cards</button> */}
+              <button onClick={() => this.deal()}>Deal</button>
+              <div className="example-grid docs-example">
+              <div className="row">
+                  <div className="one column"></div>
 
                   {rows}
 
-                  <div class="one column"></div>
+                  <div className="one column"></div>
                 </div>
             </div>
             </div>

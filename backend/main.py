@@ -4,12 +4,16 @@ from Game import Game
 import pickle
 from uuid import uuid4
 from cachelib.simple import SimpleCache
+from flask_cors import CORS, cross_origin
 
 c = SimpleCache(default_timeout=0)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'key123'
 api = Api(app)
+CORS(app, origins="http://127.0.0.1:3000", allow_headers=[
+    "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+    supports_credentials=True)
 
 
 # g1.display_table()
@@ -61,26 +65,39 @@ def new_game():
 #         result = start_game()
 #         return result
 
+# @cross_origin()
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
 class Deal(Resource):
     def post(self):
         
         g = load_game()
-        g.deal()
+        result = g.deal()
         save_game(g)
-        return 'hand dealt!'
+        return result
 
+# @cross_origin()
 class GetCards(Resource):
     def get(self):
         g = load_game()
-        g.display_table()
+        json_cards = g.get_cards()
         save_game(g)
-        return 'table displayed'
+        return json_cards
 
+# @cross_origin()
 class NewGame(Resource):
     def post(self):
         new_game()
         return 'newgame'
 
+# @cross_origin()
 class MoveCards(Resource):
     def post(self):
         g = load_game()
