@@ -189,7 +189,8 @@ class App extends React.Component{
                   onDragOver={(e)=>this.onDragOver(e)}
                   onDrop={(e)=>{this.onDrop(e, name)}}>
                     
-                  <span className="task-header">COL1</span>{tasks[name]}
+                  {/* <span className="task-header">COL1</span> */}
+                  {tasks[name]}
                    </div> 
           );
 
@@ -255,19 +256,15 @@ class App extends React.Component{
 
     return (
         <div id='parent'>
-             <div className="example-grid docs-example">
-            <div className="row">
-            <h2 className="header">testing drag and drop</h2>
-                      </div>
-                      </div>
-
-
+            
             <div className="container">
-              <h1>My Spidey SOlly</h1>
-              <button onClick={() => this.newGame()}>New Game</button>
-              {/* <button onClick={() => this.getAllCards()}>Get Cards</button> */}
-              <button onClick={() => this.deal()}>Deal</button>
+              <h2 style={{color:'rgb(255, 245, 238)'}}>nics-spider-solitaire</h2>
+                <button style={{color:'rgb(255, 245, 238)'}} onClick={() => this.newGame()}>New Game</button>
+                {/* <button onClick={() => this.getAllCards()}>Get Cards</button> */}
+                <button style={{color:'rgb(255, 245, 238)'}} onClick={() => this.deal()}>Deal</button>
               <div className="example-grid docs-example">
+              <div style={{paddingTop:10}}></div>
+
               <div className="row">
                   <div className="one column"></div>
 

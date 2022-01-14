@@ -1,6 +1,7 @@
 html {
     box-sizing: border-box;
     min-width: 1150px;
+    background-color: rgb(46, 30, 49);
   }
   *, *:before, *:after {
     box-sizing: inherit;
@@ -10,8 +11,9 @@ html {
       padding: 0 1em;
   }
   
+ 
   .mainheader {
-      border-bottom: 1px dotted #999;
+      border-bottom: 1px dotted rgb(255, 245, 238);
       margin: 1em 0 1em 0;
   }
   
@@ -22,7 +24,7 @@ html {
   }
   
   .panel {
-      background-color: #efefef;
+      background-color: rgb(59, 50, 141);
       padding: 10px;
   }
   
@@ -42,13 +44,13 @@ html {
       border-radius: 4px;
       font-size: 1rem;
       text-transform: uppercase;
-      padding: 10px 0 10px 0;
+      padding: 0px 0 0px 0;
       font-weight: 600;
       letter-spacing: 0.1rem;
   }
   
   .skeleton div {
-      background: none repeat scroll 0% 0% #EEE;
+      background: none repeat scroll 0% 0% rgb(12, 96, 117);
       text-align: center;
       border-radius: 4px;
       font-size: 1rem;
