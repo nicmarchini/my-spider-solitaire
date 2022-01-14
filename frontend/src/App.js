@@ -4,14 +4,24 @@ import './css/skeleton.css';
 import './css/style.css';
 import React from 'react';
 import axios from 'axios';
-import Card from './components/card';
+// import Card from './components/card';
 import Draggable from 'react-draggable';
 import './App.css'
-import foto from './assets/basic-lorg-card-club.png';
+// import club from './assets/basic-lorg-card-club.png';
+import heart from './assets/basic-lorg-card-heart.png';
+import spade from './assets/basic-lorg-card-spade.png';
+import diamond from './assets/basic-lorg-card-diamond.png';
+import back from './assets/basic-lorg-card-back4Bs.png';
 import './components/card.css';
+import { clubs } from './components/images'
+
 
 class App extends React.Component{
 
+
+  // {/* <img src={images['0.png']} /> */}
+  
+  
 
 
   onDragOver = (ev) => {
@@ -35,9 +45,9 @@ class App extends React.Component{
 
   constructor() {
     super();
- 
+
     this.state = {
-     's0':[{name:"testitem1", category:"s0",  bgcolor: "yellow", index:"0"},{name:"testitem2", category:"s1",  bgcolor:"pink", index:"1"}],
+     's0':[],
      's1':[],
      's2':[],
      's3':[],
@@ -48,18 +58,12 @@ class App extends React.Component{
      's8':[],
      's9':[],
 
-     tasks: [{name:"testitem1", category:"s0",  bgcolor: "yellow", index:"0", foto:<img src={foto}  draggable='true' className="photo-s" alt="trun" />},   
-                    {name:"testitem2", category:"s1",  bgcolor:"pink", index:"1", foto:<img src={foto}  draggable='true' className="photo-s" alt="trun" />},
-                    {name:"testitem3", category:"s2", bgcolor:"skyblue", index:"0", foto:<img src={foto}  draggable='true' className="photo-s" alt="trun" />}
-                  ]
+     tasks: []
     }
   }
 
     componentDidMount(){
-      for (let i = 0; i < 10; i++){
-        this.getCards(i);
-      }
-
+      this.getAllCards()
     }
 
     componentDidUpdate(pP,pS,SS){
@@ -89,6 +93,7 @@ class App extends React.Component{
         //   a: 10,
         //   b: 20
         // }
+
       };
     
     axios(options)
@@ -96,6 +101,7 @@ class App extends React.Component{
         console.log(response);
       });
       this.getAllCards()
+      
     }
 
     setCards(stack, cardlist){
@@ -106,12 +112,14 @@ class App extends React.Component{
       results = [].concat(cardlist);
       localStorage.setItem('s'+stack, JSON.stringify(results));
       this.getCards(stack);
+
     }
 
     clearCards(stack){
       let results = []
       localStorage.setItem('s'+stack, JSON.stringify(results));
       this.getCards(stack);
+      this.setState({ ['tasks'] : []})
     }
 
     getCards(stack){
@@ -122,6 +130,28 @@ class App extends React.Component{
       }
       let stack_num = 's'+stack;
       this.setState({ [stack_num] : results})
+    
+      let newtasks = this.state.tasks
+
+      newtasks = newtasks.filter(item => item.category !== stack_num)
+
+      for(let i=0; i<results.length; i++){
+        let foto = spade;
+        let cardnum = results[i][0]
+        if (cardnum == "K"){cardnum = 13}
+        if (cardnum == "Q"){cardnum = 12}
+        if (cardnum == "J"){cardnum = 11}
+        if (cardnum == "A"){cardnum = 1}
+        console.log("results look like:",i, results[i])
+        if (results[i][1] == 'Hearts'){foto = heart;}
+        if (results[i][1] == 'Clubs'){foto = clubs[cardnum-1] }
+        if (results[i][1] == 'Diamonds'){foto = diamond;}
+        if (results[i] == 'flipped'){foto = back;}
+        newtasks.push({name:Math.random(), category:stack_num, bgcolor:"skyblue", index:"0", foto:<img src={foto}  draggable='true' className="photo-s" alt={cardnum} />})
+      }
+
+      this.setState({ ['tasks'] : newtasks})
+
     }
   
 
@@ -149,6 +179,9 @@ class App extends React.Component{
         .then(response => {
           // console.log(JSON.parse(response.data));
           let data = JSON.parse(response.data)
+
+
+
           for (var i = 0; i < 10; i++) {
             this.setCards(i, data[i])
             this.getCards(i)
@@ -185,7 +218,7 @@ class App extends React.Component{
 
           columns.push(
                   <div className="wip one column"
-                  style={{paddingTop:80}}
+                  style={{paddingTop:92}}
                   onDragOver={(e)=>this.onDragOver(e)}
                   onDrop={(e)=>{this.onDrop(e, name)}}>
                     
@@ -204,7 +237,7 @@ class App extends React.Component{
                                       onDragStart={(e)=>this.onDragStart(e, t.name)}
                                       draggable
                                       className="draggable"
-                                      style={ {marginTop:-80}
+                                      style={ {marginTop:-92}
                                         // {backgroundColor: t.bgcolor}
                                       }
                                       >                                
@@ -231,8 +264,8 @@ class App extends React.Component{
                       
                       {/* <button onClick={() => this.setCards(num, [1,2,3,4,5]) }>Add</button> */}
                       {/* <button onClick={() => this.clearCards(num) }>Clear</button> */}
-                      { new Card('spade', '4').render()
-                      }
+                      {/* { new Card('spade', '4').render() */}
+                      {/* } */}
 
                       {/* {this.state['s'+num].map(function(card,index){
                           if (card !== null){
@@ -257,7 +290,7 @@ class App extends React.Component{
     return (
         <div id='parent'>
             
-            <div className="container">
+            <div  className="container">
               <h2 style={{color:'rgb(255, 245, 238)'}}>nics-spider-solitaire</h2>
                 <button style={{color:'rgb(255, 245, 238)'}} onClick={() => this.newGame()}>New Game</button>
                 {/* <button onClick={() => this.getAllCards()}>Get Cards</button> */}
