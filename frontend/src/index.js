@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import AppDragDropDemo from './components/jq'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
+    <AppDragDropDemo />
     <App />
+   
   </React.StrictMode>,
   document.getElementById('root')
 );

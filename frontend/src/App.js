@@ -4,8 +4,15 @@ import './css/skeleton.css';
 import './css/style.css';
 import React from 'react';
 import axios from 'axios';
+import Card from './components/card';
+import Draggable from 'react-draggable';
+import './App.css'
+
 
 class App extends React.Component{
+
+
+  
   constructor() {
     super();
 
@@ -27,6 +34,7 @@ class App extends React.Component{
       for (let i = 0; i < 10; i++){
         this.getCards(i);
       }
+
     }
 
     componentDidUpdate(pP,pS,SS){
@@ -90,6 +98,9 @@ class App extends React.Component{
       let stack_num = 's'+stack;
       this.setState({ [stack_num] : results})
     }
+  
+
+    
 
     getAllCards(){
         // let data = []
@@ -137,30 +148,46 @@ class App extends React.Component{
   }
 
   
-    render() {
+    render() {  
+      
+        var rows = [];
+        for (var i = 0; i < 10; i++) {
+            let num = i
+            rows.push(
+              
+              //math.random not ideal solution here migth cause extra re-rendering due to key not being stable can fix later
+              <div key={Math.random()} className="one column">
+                {/* stack {i} */}
 
-      var rows = [];
-      for (var i = 0; i < 10; i++) {
-          let num = i
-          rows.push(
-            //math.random not ideal solution here migth cause extra re-rendering due to key not being stable can fix later
-            <div key={Math.random()} className="one column">
-              {/* stack {i} */}
-                    
-                    {/* <button onClick={() => this.setCards(num, [1,2,3,4,5]) }>Add</button> */}
-                    {/* <button onClick={() => this.clearCards(num) }>Clear</button> */}
-                  
-                    {this.state['s'+num].map(function(card,index){
-                        return(
-                          //see above about key
-                          <p key={Math.random()}>{card[0] + " of " + card[1]}</p>
-                        )
-                    })}
+                      
+                      {/* <button onClick={() => this.setCards(num, [1,2,3,4,5]) }>Add</button> */}
+                      {/* <button onClick={() => this.clearCards(num) }>Clear</button> */}
+                      { new Card('spade', '4').render()
+                      }
 
-                  </div>);
-      } 
+                      {/* {this.state['s'+num].map(function(card,index){
+                          if (card !== null){
+                            return(
+                              //see above about key
+                              
+                              <p key={Math.random()}>{card[0] + " of " + card[1]}</p>
+                            )
+                          } else {
+                            return (
+                              <p></p>
+                             )
+                          }
+
+                      })} */}
+
+                    </div>);
+
+        }
+      
 
     return (
+        <div id='parent'>
+          
             <div className="container">
               <h1>My Spidey SOlly</h1>
               <button onClick={() => this.newGame()}>New Game</button>
@@ -176,6 +203,7 @@ class App extends React.Component{
                 </div>
             </div>
             </div>
+      </div>
     );
     }
   }
