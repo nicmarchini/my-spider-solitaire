@@ -49,16 +49,17 @@ class Card extends React.Component {
         console.log("renderign")
         return(
             
-                <div id="test3">
-                <Draggable onStop={(e, data) => {console.log('droppped!', data)
-                                                if (data.x <0){
-                                                    document.getElementById("test3").x=0;
-                                                    console.log('dropleft')} }} onDrag={(e, data) => { }}>
-                    <div>
-                        <img src={foto}  draggable='false' className="photo-s" alt="trun" />
-                     </div>
-                </Draggable>
-                </div>
+                // <div id="test3">
+                // <Draggable onStop={(e, data) => {console.log('droppped!', data)
+                //                                 if (data.x <0){
+                //                                     document.getElementById("test3").x=0;
+                //                                     console.log('dropleft')} }} onDrag={(e, data) => { }}>
+                //     <div>
+                <div draggable='true'>
+                        <img src={foto}  draggable='true' className="photo-s" alt="trun" />
+                      </div>
+                // </Draggable>
+                // </div>
 
               );
     }

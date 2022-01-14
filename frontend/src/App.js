@@ -7,17 +7,37 @@ import axios from 'axios';
 import Card from './components/card';
 import Draggable from 'react-draggable';
 import './App.css'
-
+import foto from './assets/basic-lorg-card-club.png';
+import './components/card.css';
 
 class App extends React.Component{
 
 
-  
+
+  onDragOver = (ev) => {
+    ev.preventDefault();
+  }
+
+  onDragStart = (ev, id) => {
+    console.log('dragstart:', id);
+    ev.dataTransfer.setData("id",id);
+  }
+
+  onDrop = (ev, cat) => {
+    let id = ev.dataTransfer.getData("id");
+    let tasks = this.state.tasks.filter((task) => {
+        if (task.name == id) {
+            task.category = cat;
+        }return task;
+    });
+    this.setState({ ...this.state, tasks});
+  }
+
   constructor() {
     super();
-
+ 
     this.state = {
-     's0':[],
+     's0':[{name:"testitem1", category:"s0",  bgcolor: "yellow", index:"0"},{name:"testitem2", category:"s1",  bgcolor:"pink", index:"1"}],
      's1':[],
      's2':[],
      's3':[],
@@ -26,7 +46,12 @@ class App extends React.Component{
      's6':[],
      's7':[],
      's8':[],
-     's9':[]
+     's9':[],
+
+     tasks: [{name:"testitem1", category:"s0",  bgcolor: "yellow", index:"0", foto:<img src={foto}  draggable='true' className="photo-s" alt="trun" />},   
+                    {name:"testitem2", category:"s1",  bgcolor:"pink", index:"1", foto:<img src={foto}  draggable='true' className="photo-s" alt="trun" />},
+                    {name:"testitem3", category:"s2", bgcolor:"skyblue", index:"0", foto:<img src={foto}  draggable='true' className="photo-s" alt="trun" />}
+                  ]
     }
   }
 
@@ -149,6 +174,49 @@ class App extends React.Component{
 
   
     render() {  
+
+
+
+      var columns = [];
+      var tasks = {};    
+      for(var i = 0; i < 10; i++){
+          let name = 's'+i;
+          tasks[name]=[];
+
+          columns.push(
+                  <div className="wip one column"
+                  style={{paddingTop:80}}
+                  onDragOver={(e)=>this.onDragOver(e)}
+                  onDrop={(e)=>{this.onDrop(e, name)}}>
+                    
+                  <span className="task-header">COL1</span>{tasks[name]}
+                   </div> 
+          );
+
+          console.log(tasks)
+      }
+
+
+
+      this.state.tasks.forEach ((t) => {                   
+          tasks[t.category].push(<div key={t.name}                           
+                                      onDragStart={(e)=>this.onDragStart(e, t.name)}
+                                      draggable
+                                      className="draggable"
+                                      style={ {marginTop:-80}
+                                        // {backgroundColor: t.bgcolor}
+                                      }
+                                      >                                
+                                      {t.foto}
+              </div>
+              );
+          });
+  
+
+
+
+
+
       
         var rows = [];
         for (var i = 0; i < 10; i++) {
@@ -187,7 +255,13 @@ class App extends React.Component{
 
     return (
         <div id='parent'>
-          
+             <div className="example-grid docs-example">
+            <div className="row">
+            <h2 className="header">testing drag and drop</h2>
+                      </div>
+                      </div>
+
+
             <div className="container">
               <h1>My Spidey SOlly</h1>
               <button onClick={() => this.newGame()}>New Game</button>
@@ -197,7 +271,8 @@ class App extends React.Component{
               <div className="row">
                   <div className="one column"></div>
 
-                  {rows}
+                  {columns}
+
 
                   <div className="one column"></div>
                 </div>
