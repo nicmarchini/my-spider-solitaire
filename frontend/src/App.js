@@ -20,10 +20,14 @@ class App extends React.Component{
   }
 
   onDrop = (ev, cat) => {
+
+    let count = this.state.tasks.filter(x => x.category==cat).length;    
+
     let id = ev.dataTransfer.getData("id");
     let tasks = this.state.tasks.filter((task) => {
         if (task.name == id) {
             task.category = cat;
+            task.index=count+1;
         }return task;
     });
     this.setState({ ...this.state, tasks});
@@ -131,7 +135,7 @@ class App extends React.Component{
         if (results[i][1] == 'Clubs'){foto = clubs[cardnum-1] }
         if (results[i][1] == 'Diamonds'){foto = diamonds[cardnum-1];}
         if (results[i] == 'flipped'){foto = back;}
-        newtasks.push({name:Math.random(), category:stack_num, bgcolor:"skyblue", index:"0", foto:<img src={foto}  draggable='true' className="photo-s" alt={cardnum} />})
+        newtasks.push({name:Math.random(), category:stack_num, bgcolor:"skyblue", index:i, foto:<img src={foto}  draggable='true' className="photo-s" alt={cardnum} />})
       }
 
       this.setState({ ['tasks'] : newtasks})
@@ -199,7 +203,11 @@ class App extends React.Component{
           console.log(tasks)
       }
 
-      this.state.tasks.forEach ((t) => {                   
+      
+      this.state.tasks.sort(function compareFn(e1, e2) { return e1.index - e2.index })
+      
+
+      this.state.tasks.forEach ((t) => {             
           tasks[t.category].push(
              <div key={t.name}                           
                   onDragStart={(e)=>this.onDragStart(e, t.name)}
